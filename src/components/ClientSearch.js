@@ -189,25 +189,27 @@ class Search extends Component {
           bg="white"
           boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
         >
-          <Box px={{ md: "2rem" }}>
-            <Box
-              display="flex"
-              flexWrap="wrap"
-              justifyContent="space-between"
-              alignItems="center"
-              px="1rem"
+          <Box
+            bgGradient="linear(to-r, teal.500, blue.600)"
+            color="white"
+            py={10}
+            textAlign="center"
+            boxShadow="lg"
             >
-              <Box py={5}>
-                <Heading as="h2" size="lg">
-                  Open-source alternatives
-                </Heading>
-                <Text fontSize="md" fontWeight={400} color="#939fae" mt={1}>
-                  Find open-source alternatives for your favorite apps
-                </Text>
-              </Box>
-            </Box>
+              <Heading
+                as="h2"
+                size="xl"
+                fontWeight="extrabold"
+                letterSpacing="wide"
+                mb={2}
+              >
+              🚀 Open-Source Alternatives
+            </Heading>
+            <Text fontSize="lg" opacity={0.9}>
+              Discover, Compare, and Build with the best community-driven tools
+            </Text>
           </Box>
-        </Box>
+
 
         <Box ml="auto" mr="auto" maxWidth="80rem" px={2} py={4}>
           <Box>
