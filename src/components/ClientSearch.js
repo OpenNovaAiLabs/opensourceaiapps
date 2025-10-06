@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import * as JsSearch from "js-search"
+import React, { Component } from "react";
+import * as JsSearch from "js-search";
 import {
   Box,
   Icon,
@@ -8,394 +8,171 @@ import {
   InputGroup,
   Input,
   InputLeftElement,
-  Button,
-  PseudoBox,
-} from "@chakra-ui/core"
-import CompGroup from "./CompGroup"
+  SimpleGrid,
+  Tag,
+  TagLabel,
+} from "@chakra-ui/core";
+import CompGroup from "./CompGroup";
 
-class Search extends Component {
+class ClientSearch extends Component {
   state = {
     search: [],
     searchResults: [],
     isLoading: true,
-    isError: false,
-    searchQuery: ``,
+    searchQuery: "",
     category: "",
     language: "",
     license: "",
-  }
-  /**
-   * React lifecycle method to fetch the data
-   */
-  async componentDidMount() {
-    this.rebuildIndex()
+  };
+
+  componentDidMount() {
+    this.rebuildIndex();
   }
 
-  /**
-   * rebuilds the overall index based on the options
-   */
   rebuildIndex = () => {
-    const dataToSearch = new JsSearch.Search(`repo`)
-    /**
-     *  defines a indexing strategy for the data
-     * more more about it in here https://github.com/bvaughn/js-search#configuring-the-index-strategy
-     */
-    dataToSearch.indexStrategy = new JsSearch.AllSubstringsIndexStrategy()
+    const dataToSearch = new JsSearch.Search("repo");
+    dataToSearch.indexStrategy = new JsSearch.AllSubstringsIndexStrategy();
+    dataToSearch.sanitizer = new JsSearch.LowerCaseSanitizer();
+    dataToSearch.searchIndex = new JsSearch.TfIdfSearchIndex("repo");
 
-    /**
-     * defines the sanitizer for the search
-     * to prevent some of the words from being excluded
-     *
-     */
-    dataToSearch.sanitizer = new JsSearch.LowerCaseSanitizer()
+    ["site", "name", "repo", "license", "main", "language", "category"].forEach(
+      (field) => dataToSearch.addIndex(field)
+    );
 
-    /**
-     * defines the search index
-     * read more in here https://github.com/bvaughn/js-search#configuring-the-search-index
-     */
-    dataToSearch.searchIndex = new JsSearch.TfIdfSearchIndex(`repo`)
+    dataToSearch.addDocuments(this.props.comps);
+    this.setState({ search: dataToSearch, isLoading: false });
+  };
 
-    dataToSearch.addIndex(`site`) // sets the index attribute for the data
-    dataToSearch.addIndex(`name`) // sets the index attribute for the data
-    dataToSearch.addIndex(`repo`) // sets the index attribute for the data
-    dataToSearch.addIndex(`license`) // sets the index attribute for the data
-    dataToSearch.addIndex(`main`) // sets the index attribute for the data
-    dataToSearch.addIndex(`language`) // sets the index attribute for the data
-    dataToSearch.addIndex(`category`) // sets the index attribute for the data
+  handleSearch = (query) => {
+    const { search, category, language, license } = this.state;
+    const queryResult = search.search(`${query} ${category} ${language} ${license}`);
+    this.setState({ searchQuery: query, searchResults: queryResult });
+  };
 
-    dataToSearch.addDocuments(this.props.comps) // adds the data to be searched
-    this.setState({ search: dataToSearch, isLoading: false })
-  }
-
-  /**
-   * handles the input change and perfom a search with js-search
-   * in which the results will be added to the state
-   */
-
-  licenseFilter = (e) => {
-    const { search, searchQuery, language, category } = this.state
-    const queryResult = search.search(
-      searchQuery + " " + e + " " + language + " " + category
-    )
-    this.setState({
-      searchResults: queryResult,
-      license: e,
-    })
-  }
-
-  languageFilter = (e) => {
-    const { search, searchQuery, license, category } = this.state
-    const queryResult = search.search(
-      searchQuery + " " + license + " " + e + " " + category
-    )
-    this.setState({
-      searchResults: queryResult,
-      language: e,
-    })
-  }
-
-  categoryFilter = (e) => {
-    const { search, searchQuery, language, license } = this.state
-    const queryResult = search.search(
-      searchQuery + " " + license + " " + language + " " + e
-    )
-    this.setState({
-      searchResults: queryResult,
-      category: e,
-    })
-
-    console.log({ queryResult })
-  }
-
-  searchData = (e) => {
-    console.log(e)
-    const { search, license, language, category } = this.state
-    const queryResult = search.search(
-      e + " " + license + " " + language + " " + category
-    )
-    this.setState({
-      searchQuery: e,
-      searchResults: queryResult,
-    })
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-  }
+  handleFilter = (type, value) => {
+    this.setState({ [type]: value }, () => this.handleSearch(this.state.searchQuery));
+  };
 
   render() {
-    const {
-      searchResults,
-      searchQuery,
-      category,
-      language,
-      license,
-    } = this.state
+    const { searchQuery, category, language, license, searchResults } = this.state;
     const queryResults =
-      searchQuery === `` && license === `` && language === `` && category === ``
-        ? this.props.comps
-        : searchResults
-
-    const compLoad =
-      searchQuery === `` && license === `` && language === `` && category === ``
-        ? this.props.mainInfo.slice(0, this.props.loadCount)
-        : this.props.mainInfo
+      searchQuery || category || language || license ? searchResults : this.props.comps;
+    const compLoad = this.props.mainInfo.slice(0, this.props.loadCount);
 
     const categories = [
-      "E-commerce",
-      "Hospitality",
-      "Developer Tools",
-      "Social Media",
-      "Communication",
-      "Analytics",
-      "Password Managers",
-      "Form Builder",
-      "Cloud",
-      "Deployment",
-      "Product Management",
-      "Automation",
-      "CRM",
-    ]
+      "E-commerce", "Hospitality", "Developer Tools", "Social Media",
+      "Communication", "Analytics", "Password Managers", "Form Builder",
+      "Cloud", "Deployment", "Product Management", "Automation", "CRM",
+    ];
 
-    const licenses = [
-      "GPL V3",
-      "BSD-3",
-      "GPL",
-      "MIT",
-      "OSL-3.0",
-      "APACHE 2.0",
-      "AGPL V3",
-      "CUSTOM",
-    ]
-
-    const languages = [
-      "GO",
-      "JS",
-      "PYTHON",
-      "PHP",
-      "ELIXIR",
-      "RUBY",
-      "C",
-      "C#",
-      "C++",
-      "SHELL",
-      "TS",
-      "PERL",
-    ]
+    const licenses = ["GPL V3", "BSD-3", "GPL", "MIT", "OSL-3.0", "APACHE 2.0", "AGPL V3", "CUSTOM"];
+    const languages = ["GO", "JS", "PYTHON", "PHP", "ELIXIR", "RUBY", "C", "C#", "C++", "SHELL", "TS", "PERL"];
 
     return (
       <Box>
+        {/* Hero Section */}
         <Box
-          bg="white"
-          boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+          bgGradient="linear(to-r, teal.400, blue.500)"
+          color="white"
+          textAlign="center"
+          py={20}
+          px={4}
         >
-          <Box px={{ md: "2rem" }}>
-            <Box
-              display="flex"
-              flexWrap="wrap"
-              justifyContent="space-between"
-              alignItems="center"
-              px="1rem"
-            >
-              <Box py={5}>
-                <Heading as="h2" size="lg">
-                  Open-source alternatives
-                </Heading>
-                <Text fontSize="md" fontWeight={400} color="#939fae" mt={1}>
-                  Find open-source alternatives for your favorite apps
-                </Text>
+          <Heading as="h1" size="2xl" mb={4}>
+            Discover Open-Source Alternatives
+          </Heading>
+          <Text fontSize="xl" maxWidth="600px" mx="auto">
+            Explore open-source alternatives for your favorite commercial apps, all in one place.
+          </Text>
+          <InputGroup size="lg" mt={8} maxWidth="500px" mx="auto">
+            <InputLeftElement children={<Icon name="search" color="gray.300" />} />
+            <Input
+              placeholder="Search for anything..."
+              value={searchQuery}
+              onChange={(e) => this.handleSearch(e.target.value)}
+              bg="white"
+              color="black"
+              borderRadius="md"
+            />
+          </InputGroup>
+        </Box>
+
+        {/* Filters */}
+        <Box display="flex" flexDirection={{ base: "column", md: "row" }} maxWidth="1200px" mx="auto" mt={8} px={4}>
+          <Box minWidth="200px" mr={{ md: 6 }} mb={{ base: 6, md: 0 }}>
+            <Box mb={4}>
+              <Text fontWeight="bold" mb={2}>Categories</Text>
+              <Box display="flex" flexWrap="wrap">
+                {["All", ...categories].map((c) => (
+                  <Tag
+                    key={c}
+                    size="sm"
+                    m={1}
+                    variant={category === c || (c === "All" && category === "") ? "solid" : "subtle"}
+                    colorScheme="blue"
+                    cursor="pointer"
+                    onClick={() => this.handleFilter("category", c === "All" ? "" : c)}
+                  >
+                    <TagLabel>{c}</TagLabel>
+                  </Tag>
+                ))}
+              </Box>
+            </Box>
+
+            <Box mb={4}>
+              <Text fontWeight="bold" mb={2}>License</Text>
+              <Box display="flex" flexWrap="wrap">
+                {["All", ...licenses].map((l) => (
+                  <Tag
+                    key={l}
+                    size="sm"
+                    m={1}
+                    variant={license === l || (l === "All" && license === "") ? "solid" : "subtle"}
+                    colorScheme="green"
+                    cursor="pointer"
+                    onClick={() => this.handleFilter("license", l === "All" ? "" : l)}
+                  >
+                    <TagLabel>{l}</TagLabel>
+                  </Tag>
+                ))}
+              </Box>
+            </Box>
+
+            <Box>
+              <Text fontWeight="bold" mb={2}>Language</Text>
+              <Box display="flex" flexWrap="wrap">
+                {["All", ...languages].map((l) => (
+                  <Tag
+                    key={l}
+                    size="sm"
+                    m={1}
+                    variant={language === l || (l === "All" && language === "") ? "solid" : "subtle"}
+                    colorScheme="orange"
+                    cursor="pointer"
+                    onClick={() => this.handleFilter("language", l === "All" ? "" : l)}
+                  >
+                    <TagLabel>{l}</TagLabel>
+                  </Tag>
+                ))}
               </Box>
             </Box>
           </Box>
-        </Box>
 
-        <Box ml="auto" mr="auto" maxWidth="80rem" px={2} py={4}>
-          <Box>
-            <InputGroup size="lg" mx={1} mb={6}>
-              <InputLeftElement
-                children={<Icon name="search" color="gray.300" />}
-              />
-              <Input
-                pr="4.5rem"
-                placeholder="Search for anything"
-                value={searchQuery}
-                onChange={(e) => {
-                  this.searchData(e.target.value)
-                }}
-                boxShadow="sm"
-              />
-            </InputGroup>
-            <Box
-              display="flex"
-              alignItems="flex-start"
-              flexDirection={{ base: "column", md: "row" }}
-            >
-              <Box
-                p={3}
-                maxWidth={{ base: "100%", md: "18rem" }}
-                // bg="#122a4f"
-                bg="white"
-                boxShadow="md"
-                borderRadius={4}
-                mx={1}
-                mb={6}
-              >
-                <Box>
-                  <Box display="flex" flexDirection="column">
-                    <Box mb={5}>
-                      <Box color="gray.600" mx={2} mb={1} fontWeight={500}>
-                        Categories
-                      </Box>
-                      <Box display="flex" flexWrap="wrap">
-                        <PseudoBox
-                          px={3}
-                          py={1}
-                          m={1}
-                          borderRadius={4}
-                          color={"white"}
-                          fontWeight={600}
-                          fontSize="sm"
-                          letterSpacing="wide"
-                          bg={category === "" ? "#122a4f" : "#2b4a7b"}
-                          textTransform="uppercase"
-                          _hover={category !== "" && { bg: "#1a3765" }}
-                          onClick={() => this.categoryFilter("")}
-                          cursor="pointer"
-                        >
-                          All
-                        </PseudoBox>
-                        {categories.map((c) => (
-                          <PseudoBox
-                            px={3}
-                            py={1}
-                            m={1}
-                            borderRadius={4}
-                            color={"white"}
-                            fontWeight={600}
-                            letterSpacing="wide"
-                            fontSize="sm"
-                            bg={category === c ? "#122a4f" : "#2b4a7b"}
-                            textTransform="uppercase"
-                            _hover={category !== c && { bg: "#1a3765" }}
-                            onClick={() => this.categoryFilter(c)}
-                            cursor="pointer"
-                          >
-                            {c}
-                          </PseudoBox>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box mb={5}>
-                      <Box color="gray.600" mx={2} mb={1} fontWeight={500}>
-                        License
-                      </Box>
-                      <Box display="flex" flexWrap="wrap">
-                        <PseudoBox
-                          px={3}
-                          py={1}
-                          m={1}
-                          borderRadius={4}
-                          color={"white"}
-                          fontWeight={600}
-                          letterSpacing="wide"
-                          fontSize="sm"
-                          bg={license === "" ? "#122a4f" : "#00bf70"}
-                          textTransform="uppercase"
-                          _hover={license !== "" && { bg: "#029c5d" }}
-                          onClick={() => this.licenseFilter("")}
-                          cursor="pointer"
-                        >
-                          All
-                        </PseudoBox>
-                        {licenses.map((c) => (
-                          <PseudoBox
-                            px={3}
-                            py={1}
-                            m={1}
-                            borderRadius={4}
-                            color={"white"}
-                            fontWeight={600}
-                            fontSize="sm"
-                            letterSpacing="wide"
-                            bg={license === c ? "#122a4f" : "#00bf70"}
-                            textTransform="uppercase"
-                            _hover={license !== c && { bg: "#029c5d" }}
-                            onClick={() => this.licenseFilter(c)}
-                            cursor="pointer"
-                          >
-                            {c}
-                          </PseudoBox>
-                        ))}
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Box color="gray.600" mx={2} mb={1} fontWeight={500}>
-                        Language
-                      </Box>
-                      <Box display="flex" flexWrap="wrap">
-                        <PseudoBox
-                          px={3}
-                          py={1}
-                          m={1}
-                          borderRadius={4}
-                          color={"white"}
-                          fontSize="sm"
-                          fontWeight={600}
-                          letterSpacing="wide"
-                          bg={language === "" ? "#122a4f" : "orange.500"}
-                          textTransform="uppercase"
-                          _hover={language !== "" && { bg: "#af5417" }}
-                          onClick={() => this.languageFilter("")}
-                          cursor="pointer"
-                        >
-                          All
-                        </PseudoBox>
-                        {languages.map((c) => (
-                          <PseudoBox
-                            px={3}
-                            py={1}
-                            m={1}
-                            borderRadius={4}
-                            color={"white"}
-                            fontWeight={600}
-                            letterSpacing="wide"
-                            fontSize="sm"
-                            bg={language === c ? "#122a4f" : "orange.500"}
-                            textTransform="uppercase"
-                            _hover={language !== c && { bg: "#af5417" }}
-                            onClick={() => this.languageFilter(c)}
-                            cursor="pointer"
-                          >
-                            {c}
-                          </PseudoBox>
-                        ))}
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-              <Box display="flex" flexWrap="wrap" width="100%">
-                {compLoad.map((comp) => {
-                  const match = queryResults.filter(
-                    (alt) => alt.mainID === comp.id
-                  )
-                  if (match.length > 0) {
-                    return (
-                      <CompGroup
-                        comp={comp}
-                        commercial={comp.commercial}
-                        alts={match}
-                      />
-                    )
-                  }
-                })}
-              </Box>
-            </Box>
+          {/* Results Grid */}
+          <Box flex="1">
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+              {compLoad.map((comp) => {
+                const match = queryResults.filter((alt) => alt.mainID === comp.id);
+                if (match.length > 0) {
+                  return <CompGroup key={comp.id} comp={comp} commercial={comp.commercial} alts={match} />;
+                }
+              })}
+            </SimpleGrid>
           </Box>
         </Box>
       </Box>
-    )
+    );
   }
 }
 
-export default Search
+export default ClientSearch;
