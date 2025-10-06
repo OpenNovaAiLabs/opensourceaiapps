@@ -190,12 +190,12 @@ class Search extends Component {
           boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
         >
           <Box
-            bgGradient="linear(to-r, teal.500, blue.600)"
-            color="white"
-            py={10}
-            textAlign="center"
-            boxShadow="lg"
-            >
+              bgGradient="linear(to-r, teal.500, blue.600)"
+              color="white"
+              py={10}
+              textAlign="center"
+              boxShadow="lg"
+           >
               <Heading
                 as="h2"
                 size="xl"
@@ -209,8 +209,9 @@ class Search extends Component {
               Discover, Compare, and Build with the best community-driven tools
             </Text>
           </Box>
-
-
+        </Box>
+      </Box>
+        
         <Box ml="auto" mr="auto" maxWidth="80rem" px={2} py={4}>
           <Box>
             <InputGroup size="lg" mx={1} mb={6}>
@@ -395,6 +396,7 @@ class Search extends Component {
             </Box>
           </Box>
         </Box>
+      </Box>
     )
   }
 }
