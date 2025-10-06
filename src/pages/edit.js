@@ -1,30 +1,31 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { graphql } from "gatsby"
 import {
   Box,
+  Badge,
+  Icon,
   Heading,
+  Divider,
   Text,
+  Tooltip,
+  Link,
+  PseudoBox,
 } from "@chakra-ui/core"
 import { useJsonForm } from "gatsby-tinacms-json"
 import SEO from "../components/seo"
 import CompGroup from "../components/CompGroup"
 
-/**
- * Home Page – OpenSource AI Apps
- * Displays a curated list of open-source alternatives to popular commercial applications.
- */
-
-const IndexPage = ({ data }) => {
+const Index = ({ data, location }) => {
   const [{ alternatives }] = useJsonForm(data.altsJson, {
-    label: "Manage App Comparisons",
+    label: "Add an app comparison",
     fields: [
       {
         label: "Comparisons",
         name: "rawJson.alternatives",
         component: "group-list",
-        description: "List of app comparisons",
+        description: "Comparisons List",
         itemProps: (item) => ({
-          label: item?.commercial?.[0]?.main || "Untitled Comparison",
+          label: item.commercial[0].main,
         }),
         defaultItem: () => ({
           main: "New Comparison",
@@ -32,44 +33,103 @@ const IndexPage = ({ data }) => {
           id: Math.random().toString(36).substr(2, 9),
         }),
         fields: [
+          // {
+          //   label: "Main Application",
+          //   name: "main",
+          //   component: "text",
+          // },
+          // {
+          //   label: "Website",
+          //   name: "website",
+          //   component: "text",
+          // },
+          // {
+          //   label: "Logo URL",
+          //   name: "svg",
+          //   component: "text",
+          // },
           {
             label: "Commercial Apps",
             name: "commercial",
             component: "group-list",
-            description: "List of commercial software",
+            description: "Commercial Apps",
             itemProps: (item) => ({
               label: item.main,
             }),
             fields: [
-              { label: "Main Application", name: "main", component: "text" },
-              { label: "Website", name: "website", component: "text" },
-              { label: "Logo URL", name: "svg", component: "text" },
+              {
+                label: "Main Application",
+                name: "main",
+                component: "text",
+              },
+              {
+                label: "Website",
+                name: "website",
+                component: "text",
+              },
+              {
+                label: "Logo URL",
+                name: "svg",
+                component: "text",
+              },
             ],
           },
           {
-            label: "Open Source Alternatives",
+            label: "Opensource Alternatives",
             name: "alts",
             component: "group-list",
-            description: "List of open-source alternatives",
+            description: "Alternatives List",
             itemProps: (item) => ({
               label: item.name,
             }),
             fields: [
-              { label: "Name", name: "name", component: "text" },
-              { label: "Stars", name: "stars", component: "text" },
-              { label: "License", name: "license", component: "text" },
-              { label: "Logo URL", name: "svg", component: "text" },
-              { label: "Website", name: "site", component: "text" },
-              { label: "Language", name: "language", component: "text" },
-              { label: "Repository", name: "repo", component: "text" },
-              { label: "Deploy Link", name: "deploy", component: "text" },
+              {
+                label: "Name",
+                name: "name",
+                component: "text",
+              },
+              {
+                label: "Stars",
+                name: "stars",
+                component: "text",
+              },
+              {
+                label: "License",
+                name: "license",
+                component: "text",
+              },
+              {
+                label: "Logo URL",
+                name: "svg",
+                component: "text",
+              },
+              {
+                label: "Site",
+                name: "site",
+                component: "text",
+              },
+              {
+                label: "Language",
+                name: "language",
+                component: "text",
+              },
+              {
+                label: "Repo",
+                name: "repo",
+                component: "text",
+              },
+              {
+                label: "Deploy",
+                name: "deploy",
+                component: "text",
+              },
             ],
           },
           {
             name: "category",
             component: "select",
             label: "Category",
-            description: "Select a relevant category",
+            description: "Select a category",
             options: [
               "E-commerce",
               "Developer Tools",
@@ -93,31 +153,41 @@ const IndexPage = ({ data }) => {
 
   return (
     <>
-      <SEO title="OpenSource AI Apps | Discover the Best Free Alternatives" />
-      
-      {/* Header Section */}
-      <Box bg="white" boxShadow="sm" py={6} px={{ base: 4, md: 10 }}>
-        <Heading as="h1" size="lg" mb={2}>
-          Discover Open-Source Alternatives
-        </Heading>
-        <Text fontSize="md" color="gray.600">
-          Explore free, community-powered software built to replace popular commercial tools.
-        </Text>
+      <SEO title="Opensource.builders" />
+      <Box
+        bg="white"
+        boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)"
+      >
+        <Box px={{ md: "2rem" }}>
+          <Box
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="space-between"
+            alignItems="center"
+            px="1rem"
+          >
+            <Box py={5}>
+              <Heading as="h2" size="lg">
+                Open-source alternatives
+              </Heading>
+              <Text fontSize="md" fontWeight={400} color="#939fae" mt={1}>
+                Find open-source alternatives for your favorite apps
+              </Text>
+            </Box>
+          </Box>
+        </Box>
       </Box>
-
-      {/* Main Content */}
       <Box
         display="flex"
         flexWrap="wrap"
-        justifyContent="center"
-        maxW="60rem"
-        mx="auto"
-        px={3}
-        py={6}
+        ml="auto"
+        mr="auto"
+        maxWidth="60rem"
+        px={2}
+        py={4}
       >
-        {alternatives?.map((comp, index) => (
+        {data.altsJson.alternatives.map((comp) => (
           <CompGroup
-            key={index}
             comp={comp}
             commercial={comp.commercial}
             alts={comp.alts}
@@ -128,9 +198,8 @@ const IndexPage = ({ data }) => {
   )
 }
 
-export default IndexPage
+export default Index
 
-// GraphQL Query
 export const pageQuery = graphql`
   query {
     site {
