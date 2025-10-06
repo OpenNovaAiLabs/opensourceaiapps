@@ -144,7 +144,7 @@ class Search extends Component {
         >
           <Box
             bgGradient="linear(to-r, teal.500, blue.600)"
-            color="white"
+            color="black"
             py={10}
             textAlign="center"
             boxShadow="lg"
