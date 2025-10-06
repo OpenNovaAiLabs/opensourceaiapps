@@ -13,7 +13,7 @@ import {
   PopoverBody,
 } from "@chakra-ui/core"
 import Logo from "./logo"
-import "logo.png"
+import MyLogo from "./logo.png";
 
 export default function Header({ children, location }) {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -59,7 +59,7 @@ export default function Header({ children, location }) {
               <Box display="flex" my={3} pr={2}>
                 <Box minWidth="46px" maxWidth="0px">
                   <img
-                      src="src/components/logo.png"
+                      src={MyLogo}
                       style={{ height: "50px", borderRadius: "8px" }}
                   />
                 </Box>
