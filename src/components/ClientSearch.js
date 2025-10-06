@@ -395,7 +395,6 @@ class Search extends Component {
             </Box>
           </Box>
         </Box>
-      </Box>
     )
   }
 }
