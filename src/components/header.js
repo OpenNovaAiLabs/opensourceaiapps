@@ -133,8 +133,14 @@ export default function Header({ children, location }) {
                           onClick: onClose,
                         })}
                       {navItem({
-                        to: "/category",
+                        to: "/",
                         name: "Alternatives",
+                        my: 2,
+                        onClick: onClose,
+                      })}
+                      {navItem({
+                        to: "/Category",
+                        name: "All Alternatives",
                         my: 2,
                         onClick: onClose,
                       })}
@@ -159,7 +165,8 @@ export default function Header({ children, location }) {
           <Box display={{ base: "none", sm: "flex" }}>
             {process.env.NODE_ENV === "development" &&
               navItem({ to: "/edit", name: "Edit" })}
-            {navItem({ to: "/category", name: "Alternatives" })}
+            {navItem({ to: "/", name: "Alternatives" })}
+            {navItem({ to: "/Category", name: "All Alternatives" })}
             {navItem({ to: "/requests", name: "Requests" })}
             {navItem({ to: "/about", name: "About" })}
           </Box>
