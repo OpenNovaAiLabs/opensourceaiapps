@@ -171,20 +171,20 @@ class Search extends Component {
               />
               <Input
                 pr="4.5rem"
-                placeholder="Search for anything..."
+                placeholder="Search for alternatives..."
                 value={searchQuery}
                 onChange={(e) => this.searchData(e.target.value)}
                 borderRadius="full"
                 color="gray.700"
                 bg="white"
-                _focus={{ borderColor: "teal.500" }}
+                _focus={{ borderColor: "blue.500" }}
               />
             </InputGroup>
           </Box>
 
           <Button
             size="lg"
-            colorScheme="teal"
+            colorScheme="blue"
             bg="whiteAlpha.200"
             _hover={{ bg: "whiteAlpha.300" }}
             borderRadius="full"
