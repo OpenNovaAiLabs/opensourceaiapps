@@ -131,12 +131,12 @@ export default function Header({ children, location }) {
                       })}
                     {navItem({
                       to: "/",
-                      name: "Alternatives",
+                      name: "Home",
                       my: 2,
                       onClick: onClose,
                     })}
                     {navItem({
-                      to: "/category", // ✅ lowercase route
+                      to: "/edit", // ✅ lowercase route
                       name: "All Alternatives",
                       my: 2,
                       onClick: onClose,
@@ -163,8 +163,8 @@ export default function Header({ children, location }) {
           <Box display={{ base: "none", sm: "flex" }}>
             {process.env.NODE_ENV === "development" &&
               navItem({ to: "/edit", name: "Edit" })}
-            {navItem({ to: "/", name: "Alternatives" })}
-            {navItem({ to: "/category", name: "All Alternatives" })} {/* ✅ fixed */}
+            {navItem({ to: "/", name: "Home" })}
+            {navItem({ to: "/edit", name: "All Alternatives" })} {/* ✅ fixed */}
             {navItem({ to: "/requests", name: "Requests" })}
             {navItem({ to: "/about", name: "About" })}
           </Box>
