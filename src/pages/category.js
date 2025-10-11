@@ -11,7 +11,22 @@ import {
   Button,
   PseudoBox,
 } from "@chakra-ui/core"
-import CompGroup from "../components/CompGroup.js"
+import React, { useEffect } from "react"
+import { graphql } from "gatsby"
+import {
+  Box,
+  Badge,
+  Icon,
+  Heading,
+  Divider,
+  Text,
+  Tooltip,
+  Link,
+  PseudoBox,
+} from "@chakra-ui/core"
+import { useJsonForm } from "gatsby-tinacms-json"
+import SEO from "../components/seo"
+import CompGroup from "../components/CompGroup"
 
 class Search extends Component {
   state = {
