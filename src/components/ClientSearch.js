@@ -161,6 +161,59 @@ class Search extends Component {
           >
             Discover, compare, and build with the best community-driven tools.
           </Text>
+  <Box
+    width="100%"
+    maxW="80rem"
+    overflowX="auto"
+    whiteSpace="nowrap"
+    py={4}
+    mb={8}
+    sx={{
+      "&::-webkit-scrollbar": { display: "none" },
+    }}
+  >
+    <Box display="inline-flex" gap={6} px={4}>
+      {[
+        { name: "Slack", logo: "/logos/slack.png" },
+        { name: "Zoom", logo: "/logos/zoom.png" },
+        { name: "Notion", logo: "/logos/notion.png" },
+        { name: "Salesforce", logo: "/logos/salesforce.png" },
+        { name: "Asana", logo: "/logos/asana.png" },
+        { name: "Dropbox", logo: "/logos/dropbox.png" },
+        { name: "Figma", logo: "/logos/figma.png" },
+      ].map((app) => (
+        <Box
+          as="button"
+          key={app.name}
+          onClick={() => {
+            this.searchData(app.name)
+            document
+              .getElementById("search-section")
+              .scrollIntoView({ behavior: "smooth" })
+          }}
+          _hover={{ transform: "scale(1.05)" }}
+          transition="all 0.2s ease"
+        >
+          <Box
+            as="img"
+            src={app.logo}
+            alt={app.name}
+            height="70px"
+            width="70px"
+            borderRadius="md"
+            boxShadow="md"
+            bg="white"
+            p={2}
+            mx={2}
+          />
+          <Text mt={2} fontSize="sm" fontWeight="bold" color="white">
+            {app.name}
+          </Text>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+
 
           {/* Centered Search Bar */}
           <Box width={{ base: "100%", md: "40rem" }} mb={12}>
