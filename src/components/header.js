@@ -12,8 +12,7 @@ import {
   PopoverContent,
   PopoverBody,
 } from "@chakra-ui/core"
-import Logo from "./logo"
-import MyLogo from "./logo.png";
+import MyLogo from "./logo.png"
 
 export default function Header({ children, location }) {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -26,8 +25,8 @@ export default function Header({ children, location }) {
         fontSize=".875rem"
         color="white"
         fontWeight="500"
-        bg={location.pathname === to && "#304571"}
-        _hover={{ color: "gray.50", bg: location.pathname != to && "#1a294c" }}
+        bg={location?.pathname === to && "#304571"}
+        _hover={{ color: "gray.50", bg: location?.pathname !== to && "#1a294c" }}
         px={2}
         py={1}
         mx={2}
@@ -54,19 +53,20 @@ export default function Header({ children, location }) {
           alignItems="center"
           p=".75rem"
         >
+          {/* Logo Section */}
           <Box flex={3}>
             <Link to="/">
-              <Box display="flex" my={3} pr={2}>
-                <Box minWidth="46px" maxWidth="0px">
+              <Box display="flex" my={3} pr={2} alignItems="center">
+                <Box minWidth="46px" mr={2}>
                   <img
-                      src={MyLogo}
-                      style={{ height: "50px", borderRadius: "8px" }}
+                    src={MyLogo}
+                    alt="OpenSource AI Apps Logo"
+                    style={{ height: "50px", borderRadius: "8px" }}
                   />
                 </Box>
                 <Box>
                   <Text
                     color="gray.200"
-                    pl=".6rem"
                     fontWeight={800}
                     fontSize="sm"
                     lineHeight=".8rem"
@@ -76,7 +76,6 @@ export default function Header({ children, location }) {
                   </Text>
                   <Text
                     color="white"
-                    pl={2}
                     fontWeight={500}
                     fontSize="4xl"
                     lineHeight="2.3rem"
@@ -88,85 +87,84 @@ export default function Header({ children, location }) {
               </Box>
             </Link>
           </Box>
-          <>
-            <Popover>
-              {({ isOpen, onClose }) => (
-                <>
-                  <PopoverTrigger>
-                    <Button
-                      ml="auto"
-                      px={1}
-                      bg="transparent"
-                      color="#9fa6b2"
-                      display={{
-                        base: "flex",
-                        sm: "none",
-                      }}
-                      _hover={{ bg: "#374151", color: "#fff" }}
-                      ref={btnRef}
-                      onClick={onOpen}
+
+          {/* Mobile Menu */}
+          <Popover>
+            {({ isOpen, onClose }) => (
+              <>
+                <PopoverTrigger>
+                  <Button
+                    ml="auto"
+                    px={1}
+                    bg="transparent"
+                    color="#9fa6b2"
+                    display={{ base: "flex", sm: "none" }}
+                    _hover={{ bg: "#374151", color: "#fff" }}
+                    ref={btnRef}
+                    onClick={onOpen}
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M4 6H20M4 12H20M4 18H20"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent zIndex={4} width="200px" py={2} bg="gray.800">
-                    <PopoverBody>
-                      {process.env.NODE_ENV === "development" &&
-                        navItem({
-                          to: "/edit",
-                          name: "Edit",
-                          my: 2,
-                          onClick: onClose,
-                        })}
-                      {navItem({
-                        to: "/",
-                        name: "Alternatives",
+                      <path
+                        d="M4 6H20M4 12H20M4 18H20"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent zIndex={4} width="200px" py={2} bg="gray.800">
+                  <PopoverBody>
+                    {process.env.NODE_ENV === "development" &&
+                      navItem({
+                        to: "/edit",
+                        name: "Edit",
                         my: 2,
                         onClick: onClose,
                       })}
-                      {navItem({
-                        to: "/Category",
-                        name: "All Alternatives",
-                        my: 2,
-                        onClick: onClose,
-                      })}
-                      {navItem({
-                        to: "/requests",
-                        name: "Requests",
-                        my: 2,
-                        onClick: onClose,
-                      })}
-                      {navItem({
-                        to: "/about",
-                        name: "About",
-                        my: 2,
-                        onClick: onClose,
-                      })}
-                    </PopoverBody>
-                  </PopoverContent>
-                </>
-              )}
-            </Popover>
-          </>
+                    {navItem({
+                      to: "/",
+                      name: "Alternatives",
+                      my: 2,
+                      onClick: onClose,
+                    })}
+                    {navItem({
+                      to: "/category", // ✅ lowercase route
+                      name: "All Alternatives",
+                      my: 2,
+                      onClick: onClose,
+                    })}
+                    {navItem({
+                      to: "/requests",
+                      name: "Requests",
+                      my: 2,
+                      onClick: onClose,
+                    })}
+                    {navItem({
+                      to: "/about",
+                      name: "About",
+                      my: 2,
+                      onClick: onClose,
+                    })}
+                  </PopoverBody>
+                </PopoverContent>
+              </>
+            )}
+          </Popover>
+
+          {/* Desktop Menu */}
           <Box display={{ base: "none", sm: "flex" }}>
             {process.env.NODE_ENV === "development" &&
               navItem({ to: "/edit", name: "Edit" })}
             {navItem({ to: "/", name: "Alternatives" })}
-            {navItem({ to: "/Category", name: "All Alternatives" })}
+            {navItem({ to: "/category", name: "All Alternatives" })} {/* ✅ fixed */}
             {navItem({ to: "/requests", name: "Requests" })}
             {navItem({ to: "/about", name: "About" })}
           </Box>
