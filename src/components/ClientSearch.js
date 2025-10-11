@@ -177,14 +177,14 @@ class Search extends Component {
                 borderRadius="full"
                 color="gray.700"
                 bg="white"
-                _focus={{ borderColor: "blue.500" }}
+                _focus={{ borderColor: "teal.500" }}
               />
             </InputGroup>
           </Box>
 
           <Button
             size="lg"
-            colorScheme="blue"
+            colorScheme="teal"
             bg="whiteAlpha.200"
             _hover={{ bg: "whiteAlpha.300" }}
             borderRadius="full"
