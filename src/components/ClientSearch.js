@@ -139,8 +139,8 @@ class Search extends Component {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          bgGradient="linear(to-br, blue.700, cyan.200)"
-          color="white"
+          bgGradient="linear(to-br, blue.400, blue.600)"
+          color="blue"
           textAlign="center"
           px={6}
         >
