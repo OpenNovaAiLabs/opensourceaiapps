@@ -11,7 +11,7 @@ import {
   Button,
   PseudoBox,
 } from "@chakra-ui/core"
-import CompGroup from "./CompGroup"
+import CompGroup from "../components/CompGroup"
 
 class Search extends Component {
   state = {
